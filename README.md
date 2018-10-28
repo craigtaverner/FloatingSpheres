@@ -3,6 +3,8 @@
 A simple network modeling app for VR. Using VR controllers to interactively build simple and perhaps even
 complex network or graph models.
 
+![Screenshot of a sample network model](https://github.com/craigtaverner/FloatingSpheres/blob/master/Screenshots/FloatingSpheres_3_20181021_002044.png)
+
 ## Building
 
 This application uses two plugins from the Unity Asset Store:
