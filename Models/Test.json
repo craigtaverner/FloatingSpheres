@@ -1,0 +1,1 @@
+{"edges":[{"endNode":0,"startNode":1}],"labels":[{"color":{"a":1,"b":0,"g":0,"r":1},"labelId":0,"name":"Person"},{"color":{"a":1,"b":1,"g":0,"r":0},"labelId":1,"name":"Post"}],"name":"Test","nodes":[{"labelId":0,"nodeId":0,"position":{"x":-0.129614532,"y":0.891618252,"z":0.7023016}},{"labelId":0,"nodeId":1,"position":{"x":0.6894279,"y":1.47179544,"z":0.5277471}}],"scale":1}
