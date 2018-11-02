@@ -8,6 +8,7 @@ namespace FloatingSpheres
 {
     public class Neo4jManager : MonoBehaviour
     {
+        public FloatingSpheres floatingSpheres;
         public string boltAddress = "bolt://localhost:7687";
         public string username = "neo4j";
         public string password = "neo4j";
@@ -28,6 +29,10 @@ namespace FloatingSpheres
 
         void Start()
         {
+            if (this.floatingSpheres == null)
+            {
+                this.floatingSpheres = Component.FindObjectOfType<FloatingSpheres>();
+            }
             loginMenuCanvas = CheckCanvas(loginMenuCanvas, this.transform, "Login to Neo4j Menu");
             openLoginButton = CheckButton(openLoginButton, this.transform, "Open Login Button");
             closeLoginButton = CheckButton(openLoginButton, loginMenuCanvas.transform, "Close Login Button");
@@ -76,12 +81,9 @@ namespace FloatingSpheres
         public void Login()
         {
             Logout();
+            Debug.Log("Login: " + username);
             this.driver = GraphDatabase.Driver(boltAddress, AuthTokens.Basic(username, password));
-            using (ISession session = driver.Session())
-            {
-                IStatementResult result = session.Run("CREATE (n) RETURN n");
-            }
-            driver.Dispose();
+            this.session = driver.Session();
         }
 
         public void Logout()
@@ -103,13 +105,43 @@ namespace FloatingSpheres
             SetCypherQuery();
             if (session == null)
             {
-                session = driver.Session();
+                Login();
             }
+            Debug.Log("Execute: " + cypher);
             IStatementResult result = session.Run(cypher);
             foreach (IRecord record in result)
             {
                 Debug.Log(record.ToString());
+                foreach (string key in record.Keys)
+                {
+                    object obj = record[key];
+                    if (obj is INode)
+                    {
+                        INode node = obj as INode;
+                        string label = node.Labels.Count > 0 ? node.Labels[0].ToString() : "Unknown";
+                        IReadOnlyDictionary<string, object> properties = node.Properties;
+                        foreach (string prop in properties.Keys)
+                        {
+                            object property = properties[prop];
+                            if (property is Point)
+                            {
+                                AddPoint(label, property as Point);
+                            }
+                        }
+                    }
+                    else if (obj is Point)
+                    {
+                        AddPoint(key, obj as Point);
+                    }
+                }
             }
+        }
+
+        private void AddPoint(string label, Point point)
+        {
+            Debug.Log("AddPoint: " + point);
+            Vector3 location = new Vector3((float)point.X, (float)point.Y, (float)point.Z);
+            this.floatingSpheres.MakeNode(label, location, Color.magenta);
         }
 
         public void OpenLoginMenu()
