@@ -56,6 +56,20 @@ namespace FloatingSpheres
             return null;
         }
 
+        internal List<NodeObject> OtherNodes()
+        {
+            List<NodeObject> result = new List<NodeObject>();
+            foreach (EdgeObject edge in incoming)
+            {
+                result.Add(edge.startNode);
+            }
+            foreach (EdgeObject edge in outgoing)
+            {
+                result.Add(edge.endNode);
+            }
+            return result;
+        }
+
         internal void RemoveEdge(EdgeObject edge)
         {
             EdgeObject toRemove = null;

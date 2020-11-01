@@ -17,6 +17,7 @@ namespace FloatingSpheres
         public NodeObject endNode;
         internal float scale;
         internal float targetLength = 1.0f;
+        internal float maxLength = 1000.0f;
 
         void FixedUpdate()
         {
@@ -39,26 +40,41 @@ namespace FloatingSpheres
             Vector3 endPoint = endNode.gameObject.transform.position;
             Vector3 offset = endPoint - startPoint;
             float length = offset.magnitude;
-            float shiftBy = (length - targetLength * floatingSpheres.modelScale) * 0.05f;
-            if (System.Math.Abs(shiftBy) > 0.001d)
+            if (length > maxLength)
             {
-                Vector3 shift = new Vector3(offset.x * shiftBy, offset.y * shiftBy, offset.z * shiftBy);
-                startNode.gameObject.transform.position = startPoint + shift;
-                endNode.gameObject.transform.position = endPoint - shift;
+                //Debug.LogError("Node gap too large: " + length);
+            }
+            else
+            {
+                float shiftBy = (length - targetLength * floatingSpheres.modelScale) * 0.05f;
+                if (System.Math.Abs(shiftBy) > 0.001d)
+                {
+                    Vector3 shift = new Vector3(offset.x * shiftBy, offset.y * shiftBy, offset.z * shiftBy);
+                    startNode.gameObject.transform.position = startPoint + shift;
+                    endNode.gameObject.transform.position = endPoint - shift;
+                }
             }
         }
 
         private void UpdateCylinderPosition(GameObject cylinder, Vector3 beginPoint, Vector3 endPoint)
         {
             Vector3 offset = endPoint - beginPoint;
-            Vector3 position = beginPoint + (offset / 2.0f);
-            cylinder.transform.position = position;
-            cylinder.transform.LookAt(beginPoint);
-            Vector3 localScale = cylinder.transform.localScale;
-            localScale.z = (endPoint - beginPoint).magnitude / 1.0f;
-            localScale.x = floatingSpheres.modelScale * scale;
-            localScale.y = floatingSpheres.modelScale * scale;
-            cylinder.transform.localScale = localScale;
+            if (offset.magnitude > maxLength)
+            {
+                cylinder.SetActive(false);
+                Debug.LogError("Edge length too large: " + offset.magnitude);
+            }
+            else
+            {
+                Vector3 position = beginPoint + (offset / 2.0f);
+                cylinder.transform.position = position;
+                cylinder.transform.LookAt(beginPoint);
+                Vector3 localScale = cylinder.transform.localScale;
+                localScale.z = (endPoint - beginPoint).magnitude / 1.0f;
+                localScale.x = floatingSpheres.modelScale * scale;
+                localScale.y = floatingSpheres.modelScale * scale;
+                cylinder.transform.localScale = localScale;
+            }
         }
 
         public void UpdateConnectionX()

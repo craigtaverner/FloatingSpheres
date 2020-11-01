@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using Zinnia.Data.Type;
 
 namespace FloatingSpheres
 {
@@ -21,6 +23,11 @@ namespace FloatingSpheres
             }
             this.directory = System.IO.Path.GetFullPath(Application.dataPath + "/../Screenshots");
             System.IO.Directory.CreateDirectory(directory);
+        }
+
+        public void ResetScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         public void TakeScreenshot()

@@ -236,6 +236,15 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void Update()
 		{
+			if (player != null)
+			{
+				DoUpdate();
+			}
+		}
+
+		//-------------------------------------------------
+		private void DoUpdate()
+		{
 			NVRHand oldPointerHand = pointerHand;
             NVRHand newPointerHand = null;
 

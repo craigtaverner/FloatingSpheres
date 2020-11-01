@@ -102,14 +102,14 @@ namespace FloatingSpheres
                 }
                 if (hand.UseButtonDown)
                 {
-                    if(!floatingSpheres.canvasInput.OnCanvas)
+                    //if(!floatingSpheres.canvasInput.OnCanvas)
                     {
                         triggerWasPressed = true;
                     }
                 }
                 if (hand.UseButtonUp)
                 {
-                    if (triggerWasPressed && !floatingSpheres.canvasInput.OnCanvas)
+                    if (triggerWasPressed)// && !floatingSpheres.canvasInput.OnCanvas)
                     {
                         TriggerPressed();
                     }
